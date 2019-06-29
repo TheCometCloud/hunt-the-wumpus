@@ -4,6 +4,6 @@ If you've used Discord for any amount of time, chances are you've spotted a frie
 
 Lore aside, Hunt The Wumpus was a text-based survival game written by Gregory Yob in 1973. For Discord Hack Week, we decided to port the original game to a Discord bot format. We hope you enjoy the hunt!
 
-Click this link to add the bot to your server: [Add Bot](https://discordapp.com/oauth2/authorize/?permissions=268503056&scope=bot&client_id=594289324669927427)
+Click this link to add the bot to your server: [Add Bot](https://discordapp.com/oauth2/authorize/?permissions=268511248&scope=bot&client_id=594289324669927427)
 
 Special thanks to playtesters Nicolas Payton and Andrew Horvath.
