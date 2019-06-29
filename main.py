@@ -28,9 +28,10 @@ async def on_guild_join(guild):
 
     channel = await guild.create_text_channel("Hunting General", category=HTW_cat)
 
-    await channel.send("""To start a game of Hunt The Wumpus, type `htw!play` in `hunting-general`.
+    msg = await channel.send("""To start a game of Hunt The Wumpus, type `htw!play` in `hunting-general`.
 Type `htw!forfeit` in your game channel to end the game early.
 Happy hunting!""")
+    await msg.pin()
 
     data = {
         "guild_id": guild.id,
