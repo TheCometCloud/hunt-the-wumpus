@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 # Written by Nicholas Hanley
 # Based on Gregory Yob's original BASIC
 # Playtested by Nicolas Payton and Andrew Horvath
@@ -284,10 +282,3 @@ class Game:
         elif answer == "N":
             self.setup()
         return self.getInstructionsPromptAnswer("N")
-
-if __name__ == "__main__":
-    game = Game()
-    msg, state = game.start()
-    while state != None:
-        print(msg)
-        msg, state = state(input())
