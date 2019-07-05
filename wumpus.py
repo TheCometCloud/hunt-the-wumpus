@@ -68,15 +68,18 @@ WHAT A DODECAHEDRON IS, ASK SOMEONE)
  PIT   -  'I FEEL A DRAFT'
 """
 
+
 class Game:
     def __init__(self):
         self.setup()
+
     def setup(self, keepLocations=False):
         if keepLocations:
             self.locations = self._locations.copy()
         else:
             self.generateLocations()
         self.arrows = 5
+
     def generateLocations(self):
         locations = []
         rooms = list(range(20))
@@ -86,31 +89,45 @@ class Game:
             locations.append(room)
         self._locations = locations
         self.locations = locations.copy()
+
     def start(self):
         return self.printInstructionsPrompt()
+
     def printInstructionsPrompt(self):
         return "INSTRUCTIONS (Y-N)?", self.getInstructionsPromptAnswer
+
     def getInstructionsPromptAnswer(self, answer):
         title = "HUNT THE WUMPUS"
         answer = answer.upper()
         if answer == "Y":
-            return "\n".join((
-                    instructions,
-                    title,
-                    "",
-                    self.printLocationAndHazardWarnings(),
-                    "",
-                    self.printMoveOrShootPrompt(),
-                    )), self.getMoveOrShootAnswer
+            return (
+                "\n".join(
+                    (
+                        instructions,
+                        title,
+                        "",
+                        self.printLocationAndHazardWarnings(),
+                        "",
+                        self.printMoveOrShootPrompt(),
+                    )
+                ),
+                self.getMoveOrShootAnswer,
+            )
         if answer == "N":
-            return "\n".join((
-                    title,
-                    "",
-                    self.printLocationAndHazardWarnings(),
-                    "",
-                    self.printMoveOrShootPrompt(),
-                    )), self.getMoveOrShootAnswer
+            return (
+                "\n".join(
+                    (
+                        title,
+                        "",
+                        self.printLocationAndHazardWarnings(),
+                        "",
+                        self.printMoveOrShootPrompt(),
+                    )
+                ),
+                self.getMoveOrShootAnswer,
+            )
         return self.printInstructionsPrompt()
+
     def printLocationAndHazardWarnings(self):
         room = self.locations[0]
         tunnels = cave[room]
@@ -125,11 +142,13 @@ class Game:
                     lines.append("I FEEL A DRAFT")
                 elif item == 4 or item == 5:
                     lines.append("BATS NEARBY!")
-        lines.append("YOU ARE IN ROOM  {}".format(room+1))
-        lines.append("TUNNELS LEAD TO  {}  {}  {}".format(*(t+1 for t in tunnels)))
+        lines.append("YOU ARE IN ROOM  {}".format(room + 1))
+        lines.append("TUNNELS LEAD TO  {}  {}  {}".format(*(t + 1 for t in tunnels)))
         return "\n".join(lines)
+
     def printMoveOrShootPrompt(self):
         return "SHOOT OR MOVE (S-M)?"
+
     def getMoveOrShootAnswer(self, answer):
         answer = answer.upper()
         if answer == "S":
@@ -137,8 +156,10 @@ class Game:
         if answer == "M":
             return self.printMovePrompt(), self.getMoveAnswer
         return self.printMoveOrShootPrompt(), self.getMoveOrShootAnswer
+
     def printShootNumOfRoomsPrompt(self):
         return "NO. OF ROOMS(1-5)?"
+
     def getShootNumOfRoomsAnswer(self, answer):
         try:
             answer = int(answer)
@@ -148,8 +169,10 @@ class Game:
             return self.printShootNumOfRoomsPrompt(), self.getShootNumOfRoomsAnswer
         nrooms = answer
         path = []
+
         def printShootRoomNumberPrompt():
             return "ROOM #?"
+
         def getShootRoomNumberAnswer(answer):
             nonlocal nrooms, path
             try:
@@ -159,11 +182,16 @@ class Game:
             if answer < 1 or answer > 20:
                 return printShootRoomNumberPrompt(), getShootRoomNumberAnswer
             answer -= 1
-            if len(path) > 1 and answer == path[len(path)-1]:
-                return "\n".join((
-                        "ARROWS AREN'T THAT CROOKED - TRY ANOTHER ROOM",
-                        printShootRoomNumberPrompt()
-                        )), getShootRoomNumberAnswer
+            if len(path) > 1 and answer == path[len(path) - 1]:
+                return (
+                    "\n".join(
+                        (
+                            "ARROWS AREN'T THAT CROOKED - TRY ANOTHER ROOM",
+                            printShootRoomNumberPrompt(),
+                        )
+                    ),
+                    getShootRoomNumberAnswer,
+                )
             path.append(answer)
             nrooms -= 1
             if nrooms > 0:
@@ -179,54 +207,81 @@ class Game:
                 else:
                     room = random.choice(tunnels)
                 if room == self.locations[1]:
-                    return "\n".join((
-                            "AHA! YOU GOT THE WUMPUS!",
-                            self.printWinMessage(),
-                            self.printRestartPrompt(),
-                            )), self.getRestartAnswer
+                    return (
+                        "\n".join(
+                            (
+                                "AHA! YOU GOT THE WUMPUS!",
+                                self.printWinMessage(),
+                                self.printRestartPrompt(),
+                            )
+                        ),
+                        self.getRestartAnswer,
+                    )
                 if room == self.locations[0]:
-                    return "\n".join((
-                            "OUCH! ARROW GOT YOU!",
-                            self.printLoseMessage(),
-                            self.printRestartPrompt(),
-                            )), self.getRestartAnswer
+                    return (
+                        "\n".join(
+                            (
+                                "OUCH! ARROW GOT YOU!",
+                                self.printLoseMessage(),
+                                self.printRestartPrompt(),
+                            )
+                        ),
+                        self.getRestartAnswer,
+                    )
             msg = self.moveWumpus()
             if msg != None:
-                return "\n".join((
-                        "MISSED",
-                        msg,
-                        self.printLoseMessage(),
-                        self.printRestartPrompt(),
-                        )), self.getRestartAnswer
+                return (
+                    "\n".join(
+                        (
+                            "MISSED",
+                            msg,
+                            self.printLoseMessage(),
+                            self.printRestartPrompt(),
+                        )
+                    ),
+                    self.getRestartAnswer,
+                )
             if self.arrows == 0:
-                return "\n".join((
+                return (
+                    "\n".join(
+                        ("MISSED", self.printLoseMessage(), self.printRestartPrompt())
+                    ),
+                    self.getRestartAnswer,
+                )
+            return (
+                "\n".join(
+                    (
                         "MISSED",
-                        self.printLoseMessage(),
-                        self.printRestartPrompt(),
-                        )), self.getRestartAnswer
-            return "\n".join((
-                    "MISSED",
-                    "",
-                    self.printLocationAndHazardWarnings(),
-                    "",
-                    self.printMoveOrShootPrompt(),
-                    )), self.getMoveOrShootAnswer
+                        "",
+                        self.printLocationAndHazardWarnings(),
+                        "",
+                        self.printMoveOrShootPrompt(),
+                    )
+                ),
+                self.getMoveOrShootAnswer,
+            )
+
         return printShootRoomNumberPrompt(), getShootRoomNumberAnswer
+
     def moveWumpus(self):
         room = self.locations[1]
         self.locations[1] = random.choice([room, *cave[room]])
         if self.locations[1] == self.locations[0]:
             return "TSK TSK TSK- WUMPUS GOT YOU!"
+
     def printLoseMessage(self):
         return "HA HA HA - YOU LOSE!"
+
     def printWinMessage(self):
         return "HEE HEE HEE - THE WUMPUS'LL GETCHA NEXT TIME!!"
+
     def printMovePrompt(self):
         return "WHERE TO?"
+
     def getMoveAnswer(self, answer):
         room = self.locations[0]
         try:
-            dest = int(answer)-1
+            dest = int(answer) - 1
         except ValueError:
             return self.printMovePrompt(), self.getMoveAnswer
         if dest not in cave[room] and dest != room:
@@ -237,35 +292,44 @@ class Game:
             msg += "\n...OOPS! BUMPED A WUMPUS!"
         s = self.moveWumpus()
         if s != None:
-            return "\n".join((
-                    msg,
-                    s,
-                    self.printLoseMessage(),
-                    self.printRestartPrompt(),
-                    )), self.getRestartAnswer
+            return (
+                "\n".join((msg, s, self.printLoseMessage(), self.printRestartPrompt())),
+                self.getRestartAnswer,
+            )
         if room == self.locations[2] or room == self.locations[3]:
-            return "\n".join((
-                    "",
-                    "YYYIIIIEEEE . . . FELL IN PITS",
-                    self.printLoseMessage(),
-                    self.printRestartPrompt(),
-                    )), self.getRestartAnswer
+            return (
+                "\n".join(
+                    (
+                        "",
+                        "YYYIIIIEEEE . . . FELL IN PITS",
+                        self.printLoseMessage(),
+                        self.printRestartPrompt(),
+                    )
+                ),
+                self.getRestartAnswer,
+            )
         if room == self.locations[4] or room == self.locations[5]:
             self.locations[0] = random.randrange(20)
-            m, state = self.getMoveAnswer(str(self.locations[0]+1))
-            return "\n".join((
+            m, state = self.getMoveAnswer(str(self.locations[0] + 1))
+            return (
+                "\n".join(("", "ZAP--SUPER BAT SNATCH! ELSEWHEREVILLE FOR YOU!", m)),
+                state,
+            )
+        return (
+            "\n".join(
+                (
                     "",
-                    "ZAP--SUPER BAT SNATCH! ELSEWHEREVILLE FOR YOU!",
-                    m,
-                    )), state
-        return "\n".join((
-                "",
-                self.printLocationAndHazardWarnings(),
-                "",
-                self.printMoveOrShootPrompt(),
-                )), self.getMoveOrShootAnswer
+                    self.printLocationAndHazardWarnings(),
+                    "",
+                    self.printMoveOrShootPrompt(),
+                )
+            ),
+            self.getMoveOrShootAnswer,
+        )
+
     def printRestartPrompt(self):
         return "TRY AGAIN (Y-N)?"
+
     def getRestartAnswer(self, answer):
         answer = answer.upper()
         if answer == "Y":
@@ -273,8 +337,10 @@ class Game:
         if answer == "N":
             return "", None
         return self.printRestartPrompt(), self.getRestartAnswer
+
     def printSameSetupPrompt(self):
         return "SAME SET-UP (Y-N)?"
+
     def getSameSetupAnswer(self, answer):
         answer = answer.upper()
         if answer == "Y":
