@@ -182,7 +182,7 @@ class Game:
             if not 1 <= answer <= 20:
                 return printShootRoomNumberPrompt(), getShootRoomNumberAnswer
             answer -= 1
-            if len(path) > 1 and answer == path[-1]:
+            if len(path) >= 2 and answer == path[-2]:
                 return (
                     "\n".join(
                         (
