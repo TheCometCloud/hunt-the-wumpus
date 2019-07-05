@@ -229,7 +229,7 @@ class Game:
                         self.getRestartAnswer,
                     )
             msg = self.moveWumpus()
-            if msg != None:
+            if msg is not None:
                 return (
                     "\n".join(
                         (
@@ -291,7 +291,7 @@ class Game:
         if room == self.locations[1]:
             msg += "\n...OOPS! BUMPED A WUMPUS!"
         s = self.moveWumpus()
-        if s != None:
+        if s is not None:
             return (
                 "\n".join((msg, s, self.printLoseMessage(), self.printRestartPrompt())),
                 self.getRestartAnswer,
