@@ -165,7 +165,7 @@ class Game:
             answer = int(answer)
         except ValueError:
             return self.printShootNumOfRoomsPrompt(), self.getShootNumOfRoomsAnswer
-        if answer < 1 or answer > 5:
+        if not 1 <= answer <= 5:
             return self.printShootNumOfRoomsPrompt(), self.getShootNumOfRoomsAnswer
         nrooms = answer
         path = []
@@ -179,7 +179,7 @@ class Game:
                 answer = int(answer)
             except ValueError:
                 return printShootRoomNumberPrompt(), getShootRoomNumberAnswer
-            if answer < 1 or answer > 20:
+            if not 1 <= answer <= 20:
                 return printShootRoomNumberPrompt(), getShootRoomNumberAnswer
             answer -= 1
             if len(path) > 1 and answer == path[len(path) - 1]:
