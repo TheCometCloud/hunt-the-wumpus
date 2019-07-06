@@ -6,13 +6,20 @@ import json
 import discord
 import wumpus
 from discord.ext import commands
+from collections import namedtuple
+import argparse
+
+parser = argparse.ArgumentParser()
+parser.add_argument("-c", "--config", default="config.json")
+args = parser.parse_args()
+
+Config = namedtuple("Config", ["token", "prefix"], defaults=["htw!"])
+with open(args.config) as f:
+    config = json.load(f, object_hook=lambda obj: Config(**obj))
 
 Client = discord.Client()
 
-bot_prefix = "htw!"
-token = "YOUR TOKEN HERE"
-
-bot = commands.Bot(command_prefix=bot_prefix)
+bot = commands.Bot(command_prefix=config.prefix)
 
 guild_dict = {}
 games = {}
@@ -116,4 +123,4 @@ async def end_game(channel):
     await channel.delete()
 
 
-bot.run(token)
+bot.run(config.token)
