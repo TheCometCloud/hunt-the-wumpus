@@ -34,18 +34,17 @@ async def on_ready():
 
 @bot.event
 async def on_guild_join(guild):
-    HTW_cat = await guild.create_category("Hunt The Wumpus")
+    category = await guild.create_category("Hunt The Wumpus")
+    lobby = await category.create_text_channel("lobby")
 
-    channel = await guild.create_text_channel("Hunting General", category=HTW_cat)
-
-    msg = await channel.send(
+    message = await lobby.send(
         """To start a game of Hunt The Wumpus, type `htw!play` in `hunting-general`.
 Type `htw!forfeit` in your game channel to end the game early.
 Happy hunting!"""
     )
-    await msg.pin()
+    await message.pin()
 
-    data = {"guild_id": guild.id, "category_id": HTW_cat.id, "command_id": channel.id}
+    data = {"guild_id": guild.id, "category_id": category.id, "lobby_id": lobby.id}
 
     with open(str(guild.id) + ".json", "w") as write_file:
         json.dump(data, write_file)
@@ -68,15 +67,15 @@ async def forfeit(ctx):
     await end_game(ctx.message.channel)
 
 
-async def is_command_channel(ctx):
+async def is_lobby_channel(ctx):
     with open(str(ctx.guild.id) + ".json") as read_file:
         print("Opened file")
         data = json.load(read_file)
-    return ctx.message.channel.id == int(data["command_id"])
+    return ctx.message.channel.id == int(data["lobby_id"])
 
 
 @bot.command(help="Creates a hunt. Only usable withing the hunting general channel.")
-@commands.check(is_command_channel)
+@commands.check(is_lobby_channel)
 async def play(ctx):
     with open(str(ctx.guild.id) + ".json") as read_file:
         data = json.load(read_file)
