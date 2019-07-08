@@ -52,34 +52,31 @@ Happy hunting!"""
 
 
 @bot.event
-async def on_message(message):
-    with open(str(message.guild.id) + ".json", "r") as read_file:
-        print("Opened file")
-        data = json.load(read_file)
+async def on_message(msg):
+    await bot.process_commands(msg)
+    if msg.channel.id in games and not msg.author.bot:
+        await process_input(msg.channel, msg.content)
 
-    print("Checking for command")
-    if message.channel.id == int(data["command_id"]):
-        print("Found command")
-        await bot.process_commands(message)
 
-    elif message.channel.id in games and not message.author.bot:
-        if message.content == "htw!forfeit":
-            await end_game(message.channel)
-        else:
-            print("Checking otherwise")
-            await process_input(message.channel, message.content)
-
-    else:
-        print(message.channel.id)
-        print(data["command_id"])
+async def is_game_channel(ctx):
+    return ctx.message.channel.id in games
 
 
 @bot.command(help="Ends a hunt immediately. Only usable within a hunt channel.")
+@commands.check(is_game_channel)
 async def forfeit(ctx):
-    pass
+    await end_game(ctx.message.channel)
+
+
+async def is_command_channel(ctx):
+    with open(str(ctx.guild.id) + ".json") as read_file:
+        print("Opened file")
+        data = json.load(read_file)
+    return ctx.message.channel.id == int(data["command_id"])
 
 
 @bot.command(help="Creates a hunt. Only usable withing the hunting general channel.")
+@commands.check(is_command_channel)
 async def play(ctx):
     with open(str(ctx.guild.id) + ".json", "r") as read_file:
         data = json.load(read_file)
