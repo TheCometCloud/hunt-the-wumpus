@@ -30,6 +30,7 @@ async def on_ready():
     print("Bot online.")
     print(f"ID: {bot.user.id}")
     print(f"Version: {discord.__version__}")
+    print(f"Add bot to server: https://discordapp.com/oauth2/authorize/?permissions=268511248&scope=bot&client_id={bot.user.id}")
 
 
 @bot.event
