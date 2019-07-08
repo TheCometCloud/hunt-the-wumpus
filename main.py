@@ -31,14 +31,17 @@ async def on_ready():
     print(f"ID: {bot.user.id}")
     print(f"Version: {discord.__version__}")
     print(
-        f"Add bot to server: https://discordapp.com/oauth2/authorize/?permissions=268511248&scope=bot&client_id={bot.user.id}"
+        f"Add bot to server: https://discordapp.com/oauth2/authorize/?permissions=16&scope=bot&client_id={bot.user.id}"
     )
 
 
 @bot.event
 async def on_guild_join(guild):
     category = await guild.create_category("Hunt The Wumpus")
-    lobby = await category.create_text_channel("lobby")
+    lobby = await category.create_text_channel(
+        "lobby",
+        overwrites={bot.user: discord.PermissionOverwrite(manage_messages=True)},
+    )
 
     message = await lobby.send(
         """To start a game of Hunt The Wumpus, type `htw!play` in `hunting-general`.
