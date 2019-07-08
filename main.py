@@ -34,7 +34,7 @@ async def on_ready():
 
 @bot.event
 async def on_guild_join(guild):
-    HTW_cat = await guild.create_category("Hunt the Wumpus")
+    HTW_cat = await guild.create_category("Hunt The Wumpus")
 
     channel = await guild.create_text_channel("Hunting General", category=HTW_cat)
 
