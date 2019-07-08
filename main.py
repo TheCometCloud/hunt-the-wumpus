@@ -74,18 +74,12 @@ async def on_message(message):
             print(data["command_id"])
 
 
-@bot.command(
-    pass_context=True,
-    help="Ends a hunt immediately. Only usable within a hunt channel.",
-)
+@bot.command(help="Ends a hunt immediately. Only usable within a hunt channel.")
 async def forfeit(ctx):
     pass
 
 
-@bot.command(
-    pass_context=True,
-    help="Creates a hunt. Only usable withing the hunting general channel.",
-)
+@bot.command(help="Creates a hunt. Only usable withing the hunting general channel.")
 async def play(ctx):
     with open(str(ctx.guild.id) + ".json", "r") as read_file:
         data = json.load(read_file)
