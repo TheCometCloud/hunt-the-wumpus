@@ -98,8 +98,8 @@ async def play(ctx):
 
 
 async def process_input(channel, input):
-    msg, state = games[channel.id](input)
-    if state is None:
+    msg, games[channel.id] = games[channel.id](input)
+    if games[channel.id] is None:
         await end_game(channel)
     else:
         await channel.send(msg)
