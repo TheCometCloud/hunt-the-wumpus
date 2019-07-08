@@ -78,7 +78,7 @@ async def is_command_channel(ctx):
 @bot.command(help="Creates a hunt. Only usable withing the hunting general channel.")
 @commands.check(is_command_channel)
 async def play(ctx):
-    with open(str(ctx.guild.id) + ".json", "r") as read_file:
+    with open(str(ctx.guild.id) + ".json") as read_file:
         data = json.load(read_file)
 
     channel = await ctx.guild.create_text_channel(
