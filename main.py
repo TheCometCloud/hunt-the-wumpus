@@ -89,19 +89,17 @@ async def play(ctx):
     )
 
     game = wumpus.Game()
-    state = game.start()
-    games[channel.id] = [game, state[1]]
-
-    await channel.send(state[0])
+    msg, state = game.start()
+    games[channel.id] = state
+    await channel.send(msg)
 
 
 async def process_input(channel, input):
-    state = games[channel.id][1](input)
-    if state[1] is None:
+    msg, state = games[channel.id](input)
+    if state is None:
         await end_game(channel)
     else:
-        games[channel.id][1] = state[1]
-        await channel.send(state[0])
+        await channel.send(msg)
 
 
 async def end_game(channel):
