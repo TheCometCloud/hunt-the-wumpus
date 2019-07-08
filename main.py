@@ -30,7 +30,9 @@ async def on_ready():
     print("Bot online.")
     print(f"ID: {bot.user.id}")
     print(f"Version: {discord.__version__}")
-    print(f"Add bot to server: https://discordapp.com/oauth2/authorize/?permissions=268511248&scope=bot&client_id={bot.user.id}")
+    print(
+        f"Add bot to server: https://discordapp.com/oauth2/authorize/?permissions=268511248&scope=bot&client_id={bot.user.id}"
+    )
 
 
 @bot.event
@@ -44,11 +46,6 @@ Type `htw!forfeit` in your game channel to end the game early.
 Happy hunting!"""
     )
     await message.pin()
-
-    data = {"guild_id": guild.id, "category_id": category.id, "lobby_id": lobby.id}
-
-    with open(str(guild.id) + ".json", "w") as write_file:
-        json.dump(data, write_file)
 
 
 @bot.event
@@ -69,35 +66,33 @@ async def forfeit(ctx):
 
 
 async def is_lobby_channel(ctx):
-    with open(str(ctx.guild.id) + ".json") as read_file:
-        print("Opened file")
-        data = json.load(read_file)
-    return ctx.message.channel.id == int(data["lobby_id"])
+    category = discord.utils.find(
+        lambda c: c.name == "Hunt The Wumpus", ctx.guild.categories
+    )
+    lobby = discord.utils.find(lambda c: c.name == "lobby", category.text_channels)
+    return ctx.message.channel.id == lobby.id
 
 
 @bot.command(help="Creates a hunt. Only usable withing the hunting general channel.")
 @commands.check(is_lobby_channel)
 async def play(ctx):
-    with open(str(ctx.guild.id) + ".json") as read_file:
-        data = json.load(read_file)
-
-    channel = await ctx.guild.create_text_channel(
-        ctx.message.author.name,
-        category=bot.get_channel(data["category_id"]),
+    category = discord.utils.find(
+        lambda c: c.name == "Hunt The Wumpus", ctx.guild.categories
     )
-    await channel.set_permissions(ctx.guild.default_role, send_messages=False)
+    channel = await category.create_text_channel(
+        ctx.message.author.name,
+        overwrites={
+            ctx.guild.default_role: discord.PermissionOverwrite(send_messages=False),
+            ctx.message.author: discord.PermissionOverwrite(send_messages=True),
+            ctx.bot.user: discord.PermissionOverwrite(send_messages=True),
+        },
+    )
 
     game = wumpus.Game()
     state = game.start()
     games[channel.id] = [game, state[1]]
 
-    overwrite = discord.PermissionOverwrite()
-    overwrite.send_messages = True
-    await channel.set_permissions(ctx.message.author, overwrite=overwrite)
-    await channel.set_permissions(bot.user, overwrite=overwrite)
-
     await channel.send(state[0])
-    return data
 
 
 async def process_input(channel, input):
