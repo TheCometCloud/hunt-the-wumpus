@@ -82,7 +82,7 @@ async def play(ctx):
         data = json.load(read_file)
 
     channel = await ctx.guild.create_text_channel(
-        ctx.message.author.name + "'s Hunt",
+        ctx.message.author.name,
         category=bot.get_channel(data["category_id"]),
     )
     await channel.set_permissions(ctx.guild.default_role, send_messages=False)
