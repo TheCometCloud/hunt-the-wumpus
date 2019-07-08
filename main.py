@@ -21,7 +21,6 @@ Client = discord.Client()
 
 bot = commands.Bot(command_prefix=config.prefix)
 
-guild_dict = {}
 games = {}
 
 
