@@ -43,7 +43,7 @@ async def on_guild_join(guild):
     )
 
     message = await lobby.send(
-        """To start a game of Hunt The Wumpus, type `htw!play` in `hunting-general`.
+        """To start a game of Hunt The Wumpus, type `htw!play` in this channel.
 Type `htw!forfeit` in your game channel to end the game early.
 Happy hunting!"""
     )
@@ -61,7 +61,7 @@ async def is_game_channel(ctx):
     return ctx.message.channel.id in games
 
 
-@bot.command(help="Ends a hunt immediately. Only usable within a hunt channel.")
+@bot.command(help="End the game immediately.")
 @commands.check(is_game_channel)
 async def forfeit(ctx):
     await end_game(ctx.message.channel)
@@ -75,7 +75,7 @@ async def is_lobby_channel(ctx):
     return ctx.message.channel.id == lobby.id
 
 
-@bot.command(help="Creates a hunt. Only usable withing the hunting general channel.")
+@bot.command(help="Start a game.")
 @commands.check(is_lobby_channel)
 async def play(ctx):
     category = discord.utils.find(
