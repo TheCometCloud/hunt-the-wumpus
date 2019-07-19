@@ -17,8 +17,6 @@ Config = namedtuple("Config", ["token", "prefix"], defaults=["htw!"])
 with open(args.config) as f:
     config = json.load(f, object_hook=lambda obj: Config(**obj))
 
-Client = discord.Client()
-
 bot = commands.Bot(command_prefix=config.prefix)
 
 games = {}
