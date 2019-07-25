@@ -7,15 +7,7 @@ from discord.ext import commands
 from collections import namedtuple
 import argparse
 
-parser = argparse.ArgumentParser()
-parser.add_argument("-c", "--config", default="config.json")
-args = parser.parse_args()
-
-Config = namedtuple("Config", ["token", "prefix"], defaults=["htw!"])
-with open(args.config) as f:
-    config = json.load(f, object_hook=lambda obj: Config(**obj))
-
-bot = commands.Bot(command_prefix=config.prefix)
+bot = commands.Bot(command_prefix="htw!")
 
 games = {}
 
@@ -105,4 +97,4 @@ async def end_game(channel):
     await channel.delete()
 
 
-bot.run(config.token)
+bot.run(os.getenv("DISCORD_TOKEN"))
