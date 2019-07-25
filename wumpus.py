@@ -348,3 +348,10 @@ class Game:
         elif answer == "N":
             self.setup()
         return self.getInstructionsPromptAnswer("N")
+
+
+if __name__ == "__main__":
+    msg, state = Game().start()
+    while state is not None:
+        print(msg)
+        msg, state = state(input())
