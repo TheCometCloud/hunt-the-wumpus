@@ -1,7 +1,6 @@
 # Written by Nicholas Hanley
 # Based on Gregory Yob's original BASIC
 # Playtested by Nicolas Payton and Andrew Horvath
-
 import random
 
 cave = [

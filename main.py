@@ -1,11 +1,9 @@
-import asyncio
-import os
-import json
+from os import getenv
+
 import discord
-import wumpus
 from discord.ext import commands
-from collections import namedtuple
-import argparse
+
+from wumpus import Game
 
 bot = commands.Bot(command_prefix="htw!")
 
@@ -78,7 +76,7 @@ async def play(ctx):
         },
     )
 
-    game = wumpus.Game()
+    game = Game()
     msg, state = game.start()
     games[channel.id] = state
     await channel.send(msg)
@@ -97,4 +95,4 @@ async def end_game(channel):
     await channel.delete()
 
 
-bot.run(os.getenv("DISCORD_TOKEN"))
+bot.run(getenv("DISCORD_TOKEN"))
